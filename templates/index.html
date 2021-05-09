@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Binance Questions</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <canvas id="canvas"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--suppress JSUnresolvedLibraryURL -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<!--suppress JSUnresolvedLibraryURL -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
+<!--suppress JSUnresolvedLibraryURL -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+<script>
+    $(document).ready(function () {
+        const config = {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: "1st Delta",
+                    backgroundColor: 'rgb(255, 99, 132)', //red
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: [],
+                    order: 1
+                },{
+                    label: "1st Price Spread",
+                    backgroundColor: 'rgb(255, 99, 132)', //red
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: [],
+                    type: 'line',
+                    fill: false,
+                    order: 0
+                },{
+                    label: "2nd Delta",
+                    backgroundColor: 'rgb(255, 159, 64)', //orange
+                    borderColor: 'rgb(255, 159, 64)',
+                    data: [],
+                    order: 1
+                },{
+                    label: "2nd Price Spread",
+                    backgroundColor: 'rgb(255, 159, 64)', //orange
+                    borderColor: 'rgb(255, 159, 64)',
+                    data: [],
+                    type: 'line',
+                    fill: false,
+                    order: 0
+                },{
+                    label: "3rd Delta",
+                    backgroundColor: 'rgb(255, 205, 86)', //yellow
+                    borderColor: 'rgb(255, 205, 86)',
+                    data: [],
+                    order: 1
+                },{
+                    label: "3rd Price Spread",
+                    backgroundColor: 'rgb(255, 205, 86)', //yellow
+                    borderColor: 'rgb(255, 205, 86)',
+                    data: [],
+                    type: 'line',
+                    fill: false,
+                    order: 0
+                },{
+                    label: "4th Delta",
+                    backgroundColor: 'rgb(75, 192, 192)', //green
+                    borderColor: 'rgb(75, 192, 192)',
+                    data: [],
+                    order: 1
+                },{
+                    label: "4th Price Spread",
+                    backgroundColor: 'rgb(75, 192, 192)', //green
+                    borderColor: 'rgb(75, 192, 192)',
+                    data: [],
+                    type: 'line',
+                    fill: false,
+                    order: 0
+                },{
+                    label: "5th Delta",
+                    backgroundColor: 'rgb(54, 162, 235)', //blue
+                    borderColor: 'rgb(54, 162, 235)',
+                    data: [],
+                    order: 1
+                },{
+                    label: "5th Price Spread",
+                    backgroundColor: 'rgb(54, 162, 235)', //blue
+                    borderColor: 'rgb(54, 162, 235)',
+                    data: [],
+                    type: 'line',
+                    fill: false,
+                    order: 0
+                }],
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Every 10 seconds print the result of Q4 and the absolute delta from the previous value for each symbol.'
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: true
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Time'
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Value'
+                        }
+                    }]
+                }
+
+            }
+        };
+
+        const context = document.getElementById('canvas').getContext('2d');
+
+        const lineChart = new Chart(context, config);
+
+        const source = new EventSource("/chart-data");
+
+        source.onmessage = function (event) {
+            const data = JSON.parse(event.data);
+  
+            config.data.labels.push(data.time);
+
+            config.data.datasets[0].data.push(data.value[0]["delta"]);     
+            config.data.datasets[2].data.push(data.value[1]["delta"]);     
+            config.data.datasets[4].data.push(data.value[2]["delta"]);     
+            config.data.datasets[6].data.push(data.value[3]["delta"]);     
+            config.data.datasets[8].data.push(data.value[4]["delta"]);   
+
+            config.data.datasets[1].data.push(data.value[0]["spread"]);     
+            config.data.datasets[3].data.push(data.value[1]["spread"]);     
+            config.data.datasets[5].data.push(data.value[2]["spread"]);     
+            config.data.datasets[7].data.push(data.value[3]["spread"]);     
+            config.data.datasets[9].data.push(data.value[4]["spread"]); 
+
+            lineChart.update();
+        }
+    });
+</script>
+<h2>Questions from 1 to 4.</h2>
+
+<p><p>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+{% from "_formhelpers.html" import render_field %}
+<form method=post>
+  <dl>
+    {{ render_field(form.select) }}
+  </dl>
+  <p><input type=submit value=Answer>
+</form>
+</body>
+</html>
