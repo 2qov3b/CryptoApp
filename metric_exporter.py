@@ -14,9 +14,14 @@ class JsonCollector(object):
     list_of_metrics = response["value"]
 
     for key in list_of_metrics:
-      g = GaugeMetricFamily("symbol_spread_delta", 'Get the Price Spread and Delta.', labels=['symbol'])
-      g.add_metric([str(key['symbol'])], key['spread'], key['delta'])
+      g = GaugeMetricFamily("symbol_spread", 'Get the Price Spread.', labels=['symbol'])
+      g.add_metric([str(key['symbol'])], key['spread'])
       yield g
+
+    for key in list_of_metrics:
+      g = GaugeMetricFamily("symbol_delta", 'Get the Delta.', labels=['symbol'])
+      g.add_metric([str(key['symbol'])], key['delta'])
+      yield g  
 
 
 if __name__ == '__main__':
