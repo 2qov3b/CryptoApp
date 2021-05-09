@@ -34,10 +34,10 @@ Q2:
 ![Alt text](docs/q2.png?raw=true "Print the top 5 symbols with quote asset USDT and the highest number of trades over the last 24 hours in descending order.")
 
 Q3:
-![Alt text](docs/q2.png?raw=true "Using the symbols from Q1, what is the total notional value of the top 200 bids and asks currently on each order book?")
+![Alt text](docs/q3.png?raw=true "Using the symbols from Q1, what is the total notional value of the top 200 bids and asks currently on each order book?")
 
 Q4:
-![Alt text](docs/q2.png?raw=true "What is the price spread for each of the symbols from Q2?")
+![Alt text](docs/q4.png?raw=true "What is the price spread for each of the symbols from Q2?")
 
 Access to http://127.0.0.1:8080/metrics
 and get metrics like:
