@@ -6,7 +6,7 @@ A Flask app to show cryptocurrency trading data.
 2. Create and active a virtualenv:
 ```console
 $ python3.8 -m venv env
-$ source env/bin/active
+$ source env/bin/activate
 ```
 3. Install dependencies:
 ```console
